@@ -84,13 +84,17 @@ int main(int argc, char **argv){
   int rcr;
   int rcw;
 
-  if(can0 = socket(PF_CAN, SOCK_RAW, CAN_RAW) < 0){
+  memset(&ifr0, 0 , sizeof(ifr0));
+  memset(&ifr1, 0 , sizeof(ifr1));
+
+  can0 = socket(PF_CAN, SOCK_RAW, CAN_RAW);
+  if(can0 < 0){
     perror("CAN0");
     return 1;
   }
 
 
-  strcpy(ifr0.ifr_name, "can0");
+  strcpy(ifr0.ifr_name, interface0);
   if(ioctl(can0, SIOCGIFINDEX, &ifr0) < 0){
     perror("SIOCGIFINDEXCAN0");
     return 1;
@@ -98,12 +102,13 @@ int main(int argc, char **argv){
   addr0.can_family = AF_CAN;
   addr0.can_ifindex = ifr0.ifr_ifindex;
 
-  if (can1 = socket(PF_CAN, SOCK_RAW, CAN_RAW) < 0){
+  can1 = socket(PF_CAN, SOCK_RAW, CAN_RAW);
+  if (can1 < 0){
     perror("CAN1");
     return 1;
   }
 
-  strcpy(ifr1.ifr_name, "can1");
+  strcpy(ifr1.ifr_name, interface1);
   if(ioctl(can1, SIOCGIFINDEX, &ifr1) < 0){
     perror("SIOCGIFINDEXCAN1");
     return 1;
